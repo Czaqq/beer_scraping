@@ -1,5 +1,3 @@
-#zrobic osobny projekt który zadziala jak niezalezny program i na gita projekt
-
 from making_soup import openLinkAndReturnSoup
 import json
 
@@ -78,5 +76,3 @@ print(master_dict)
 def write_beers_to_jsonfile(json_file, my_dict):
     with open (json_file, "w", encoding="UTF-8") as jsonfile:
         json.dump(my_dict, jsonfile, ensure_ascii=False, indent=4)
-
-print(write_beers_to_jsonfile("write_beers_to_jsonfile.json", master_dict))
