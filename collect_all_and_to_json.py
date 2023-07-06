@@ -71,7 +71,6 @@ def collect(root_link):
     return maderfaker_dict
 
 master_dict = collect("https://ontap.pl")
-print(master_dict)
 
 def write_beers_to_jsonfile(json_file, my_dict):
     with open (json_file, "w", encoding="UTF-8") as jsonfile:
