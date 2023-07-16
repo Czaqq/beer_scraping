@@ -1,5 +1,11 @@
-from making_soup import openLinkAndReturnSoup
+import requests
+from bs4 import BeautifulSoup
 import json
+
+def openLinkAndReturnSoup(root_link):
+    response = requests.get(root_link)
+    soup = BeautifulSoup(response.text, "html.parser")
+    return soup
 
 def get_cities(root_link):
     cities_with_taps = []
@@ -37,7 +43,7 @@ def get_beers_in_pubs(pub_link):
     beer_kinds = soup.findAll("span", {"class": "cml_shadow"})
     beer_volts = soup.findAll("h4", {"class": "cml_shadow"})
 
-    for beer_name, beer_kind, beer_volt in zip(beer_names, beer_kinds, beer_volts):    #działa do momentu gdy ilość argumentów jest równa pomiędzy przeszukiwanymi listami
+    for beer_name, beer_kind, beer_volt in zip(beer_names, beer_kinds, beer_volts):
         try:
             beer = dict()
             beer["Beer Name"] = beer_name.contents[1].contents[4].strip()
@@ -50,25 +56,25 @@ def get_beers_in_pubs(pub_link):
 
 def collect(root_link):
     cities_with_taps, cities_with_shps = get_cities(root_link)
-    maderfaker_dict = dict()
+    collector_dict = dict()
     for pub_city in cities_with_taps:
         city_name = pub_city["city"]
         city_link = pub_city.get("link")
-        maderfaker_dict[city_name] = dict()
+        collector_dict[city_name] = dict()
         pubs_in_city = get_pubs_from_city(city_link)
 
         for pub in pubs_in_city:
             pub_name = pub.get("Pub Name")
             pub_link = pub.get("Link")
             beers_in_pub = get_beers_in_pubs(pub_link)
-            maderfaker_dict.get(city_name)[pub_name] = beers_in_pub
+            collector_dict.get(city_name)[pub_name] = beers_in_pub
 
             for beer in beers_in_pub:
                 beer_name = beer.get("Beer Name")
                 beer_kind = beer.get("Beer Kind")
                 beer_voltage = beer.get("Beer Voltage")
                 print(city_name)
-    return maderfaker_dict
+    return collector_dict
 
 master_dict = collect("https://ontap.pl")
 print(master_dict)
